@@ -1,1 +1,2 @@
-"# ARM_project" 
+使用NUCLEO-F303ZE完成的空白專案
+可以使用printf及scanf的功能
