@@ -8,19 +8,19 @@
 >>> myusart.h
 
 >> Src
->>> main.c 
->>> myusart.c
->>> syscall.c
->>> sysmem.c
+>>> main.c  
+>>> myusart.c  
+>>> syscall.c  
+>>> sysmem.c  
 
 >> Startup
 >>> startup_stm32f303zetx.s
 
->> Makefile
->> README.md
->> STM32F303.svd
->> STM32F303ZETX_FLASH.ld
->> st_nucleo_f3.cfg
+>> Makefile  
+>> README.md  
+>> STM32F303.svd  
+>> STM32F303ZETX_FLASH.ld  
+>> st_nucleo_f3.cfg  
 
 ## 使用設備
 - NUCLEO-F303ZE
