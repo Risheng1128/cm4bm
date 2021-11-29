@@ -6,7 +6,7 @@
   ******************************************************************************
   */
 
-#include "../Inc/myusart.h"
+#include "myusart.h"
 #include <stdio.h>
 
 int main(void) {
