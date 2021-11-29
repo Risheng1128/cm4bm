@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    usart.c
+  * @file    myusart.c
   * @author  Ri-Sheng Chen
   * @brief   This file contains functions to enable printf and scanf on STM32F303ZE
   ******************************************************************************
