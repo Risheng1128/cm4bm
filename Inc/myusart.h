@@ -1,3 +1,11 @@
+/**
+  ******************************************************************************
+  * @file    myusart.h
+  * @author  Ri-Sheng Chen
+  * @brief   This file contains some macros of GPIOD and USART3
+  ******************************************************************************
+  */
+
 #ifndef _USART_H_
 #define _USART_H_
 
