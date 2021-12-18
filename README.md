@@ -3,24 +3,26 @@
 使用stm32f303ze完成的專案，並實作printf及scanf功能
 
 ## 檔案編排
-> ARM-Template-Project
->> Inc
->>> myusart.h
+```
+ARM-Template-Project
+|    Makefile
+|    README.md
+|    STM32F303.svd
+|    STM32F303ZETX_FLASH.ld
+|    st_nucleo_f3.cfg
+|────Inc
+|    |    myusart.h
+|
+|────Src
+|    |    main.c 
+|    |    myusart.c
+|    |    syscall.c
+|    |    sysmem.c
+|
+|────Startup
+|    |    startup_stm32f303zetx.s
 
->> Src
->>> main.c 
->>> myusart.c
->>> syscall.c
->>> sysmem.c
-
->> Startup
->>> startup_stm32f303zetx.s
-
->> Makefile
->> README.md
->> STM32F303.svd
->> STM32F303ZETX_FLASH.ld
->> st_nucleo_f3.cfg
+```
 
 ## 使用設備
 - NUCLEO-F303ZE
