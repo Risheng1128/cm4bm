@@ -1,4 +1,4 @@
-# ARM Template Project
+# CM4 Project
 ###### tags: `ARM Cortex-M`
 使用stm32f303ze完成的專案，並實作printf及scanf功能
 
