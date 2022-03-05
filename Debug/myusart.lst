@@ -1,0 +1,590 @@
+ARM GAS  C:\Users\chian\AppData\Local\Temp\ccxueF9s.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 6
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"myusart.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.MYUSART_Init,"ax",%progbits
+  20              		.align	1
+  21              		.global	MYUSART_Init
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	MYUSART_Init:
+  27              	.LFB0:
+  28              		.file 1 "./Src/myusart.c"
+   1:./Src/myusart.c **** /**
+   2:./Src/myusart.c ****   ******************************************************************************
+   3:./Src/myusart.c ****   * @file    myusart.c
+   4:./Src/myusart.c ****   * @author  Ri-Sheng Chen
+   5:./Src/myusart.c ****   * @brief   This file contains functions to enable printf and scanf on STM32F303ZE
+   6:./Src/myusart.c ****   ******************************************************************************
+   7:./Src/myusart.c ****   * @attention
+   8:./Src/myusart.c ****   *   - PD8: USART3 Tx
+   9:./Src/myusart.c ****   *   - PD9: USART3 Rx
+  10:./Src/myusart.c ****   * 
+  11:./Src/myusart.c ****   *   ---------- GPIO Set ------------
+  12:./Src/myusart.c ****   *   - GPIOD_MODE:      Alternate function mode
+  13:./Src/myusart.c ****   *   - GPIOD_OSPEEDR:   Low Speed
+  14:./Src/myusart.c ****   *   - GPIOD_PUPDR:     No Pull-up & Pull-down
+  15:./Src/myusart.c ****   *   - GPIOD_OTYPER:    Push-Pull
+  16:./Src/myusart.c ****   *   - GPIOD_AFRH:      AF7 (USART3 Tx/Rx)
+  17:./Src/myusart.c ****   *  
+  18:./Src/myusart.c ****   *   ---------- USART3 Set ------------
+  19:./Src/myusart.c ****   *   - F_CLK:           8MHz
+  20:./Src/myusart.c ****   *   - USART3_Mode:     Tx/Rx Enable
+  21:./Src/myusart.c ****   *   - USART3_Parity:   Parity disable
+  22:./Src/myusart.c ****   *   - USART3_StopBits: 1
+  23:./Src/myusart.c ****   *   - USART3_WordLen:  8
+  24:./Src/myusart.c ****   *   - USART3_Baud:     38400
+  25:./Src/myusart.c ****   *   - USART3_HW_FLOW:  None
+  26:./Src/myusart.c ****   *   - Oversampling:    16
+  27:./Src/myusart.c ****   **/
+  28:./Src/myusart.c **** 
+  29:./Src/myusart.c **** #include "myusart.h"
+  30:./Src/myusart.c **** 
+ARM GAS  C:\Users\chian\AppData\Local\Temp\ccxueF9s.s 			page 2
+
+
+  31:./Src/myusart.c **** void MYUSART_Init()
+  32:./Src/myusart.c **** {
+  29              		.loc 1 32 1
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 1, uses_anonymous_args = 0
+  33              		@ link register save eliminated.
+  34 0000 80B4     		push	{r7}
+  35              	.LCFI0:
+  36              		.cfi_def_cfa_offset 4
+  37              		.cfi_offset 7, -4
+  38 0002 00AF     		add	r7, sp, #0
+  39              	.LCFI1:
+  40              		.cfi_def_cfa_register 7
+  33:./Src/myusart.c ****     /**************************** GPIO Set ****************************/
+  34:./Src/myusart.c ****     /* GPIOD RCC Enable */
+  35:./Src/myusart.c ****     RCC_AHBENR |= 1 << 20;  /* Enable clock of GPIOD */
+  41              		.loc 1 35 16
+  42 0004 1B4B     		ldr	r3, .L2
+  43 0006 1B68     		ldr	r3, [r3]
+  44 0008 1A4A     		ldr	r2, .L2
+  45 000a 43F48013 		orr	r3, r3, #1048576
+  46 000e 1360     		str	r3, [r2]
+  36:./Src/myusart.c ****     /* GPIOD Mode Set */
+  37:./Src/myusart.c ****     GPIOD_MODE &= ~(0xF << 16);  /* clear PD8 PD9 */
+  47              		.loc 1 37 16
+  48 0010 194B     		ldr	r3, .L2+4
+  49 0012 1B68     		ldr	r3, [r3]
+  50 0014 184A     		ldr	r2, .L2+4
+  51 0016 23F47023 		bic	r3, r3, #983040
+  52 001a 1360     		str	r3, [r2]
+  38:./Src/myusart.c ****     GPIOD_MODE |=  (0x2 << 16) | (0x2 << 18);  /* PD8 PD9 set Alternate function mode */
+  53              		.loc 1 38 16
+  54 001c 164B     		ldr	r3, .L2+4
+  55 001e 1B68     		ldr	r3, [r3]
+  56 0020 154A     		ldr	r2, .L2+4
+  57 0022 43F42023 		orr	r3, r3, #655360
+  58 0026 1360     		str	r3, [r2]
+  39:./Src/myusart.c ****     /* GPIOD Alternate Function Set */
+  40:./Src/myusart.c ****     GPIOD_AFRH &= ~(0xFF << 0);  /* clear AFR8 AFR9 */
+  59              		.loc 1 40 16
+  60 0028 144B     		ldr	r3, .L2+8
+  61 002a 1B68     		ldr	r3, [r3]
+  62 002c 134A     		ldr	r2, .L2+8
+  63 002e 23F0FF03 		bic	r3, r3, #255
+  64 0032 1360     		str	r3, [r2]
+  41:./Src/myusart.c ****     GPIOD_AFRH |=   0x77 << 0;   /* PD8: USART3 Tx | PD9: USART3 Rx */
+  65              		.loc 1 41 16
+  66 0034 114B     		ldr	r3, .L2+8
+  67 0036 1B68     		ldr	r3, [r3]
+  68 0038 104A     		ldr	r2, .L2+8
+  69 003a 43F07703 		orr	r3, r3, #119
+  70 003e 1360     		str	r3, [r2]
+  42:./Src/myusart.c **** 
+  43:./Src/myusart.c ****     /**************************** USART Set ****************************/
+  44:./Src/myusart.c ****     /* USART RCC Enable */
+  45:./Src/myusart.c ****     RCC_AHPB1ENR |= 1 << 18;   /* Enable clock of USART3 */
+ARM GAS  C:\Users\chian\AppData\Local\Temp\ccxueF9s.s 			page 3
+
+
+  71              		.loc 1 45 18
+  72 0040 0F4B     		ldr	r3, .L2+12
+  73 0042 1B68     		ldr	r3, [r3]
+  74 0044 0E4A     		ldr	r2, .L2+12
+  75 0046 43F48023 		orr	r3, r3, #262144
+  76 004a 1360     		str	r3, [r2]
+  46:./Src/myusart.c ****     /* UE (USART Enable) Set */
+  47:./Src/myusart.c ****     USART3_CR1 |= 1 << 0;
+  77              		.loc 1 47 16
+  78 004c 0D4B     		ldr	r3, .L2+16
+  79 004e 1B68     		ldr	r3, [r3]
+  80 0050 0C4A     		ldr	r2, .L2+16
+  81 0052 43F00103 		orr	r3, r3, #1
+  82 0056 1360     		str	r3, [r2]
+  48:./Src/myusart.c ****     /* USART mode set */
+  49:./Src/myusart.c ****     USART3_CR1 |= (1 << 2) | (1 << 3);  /* Enable Tx/Rx */
+  83              		.loc 1 49 16
+  84 0058 0A4B     		ldr	r3, .L2+16
+  85 005a 1B68     		ldr	r3, [r3]
+  86 005c 094A     		ldr	r2, .L2+16
+  87 005e 43F00C03 		orr	r3, r3, #12
+  88 0062 1360     		str	r3, [r2]
+  50:./Src/myusart.c ****     /* Baudrate Set */
+  51:./Src/myusart.c ****     USART3_BRR = DEFAULT_F_CLK / BAUDRATE_38400;
+  89              		.loc 1 51 5
+  90 0064 084B     		ldr	r3, .L2+20
+  91              		.loc 1 51 16
+  92 0066 D022     		movs	r2, #208
+  93 0068 1A60     		str	r2, [r3]
+  52:./Src/myusart.c **** }
+  94              		.loc 1 52 1
+  95 006a 00BF     		nop
+  96 006c BD46     		mov	sp, r7
+  97              	.LCFI2:
+  98              		.cfi_def_cfa_register 13
+  99              		@ sp needed
+ 100 006e 5DF8047B 		ldr	r7, [sp], #4
+ 101              	.LCFI3:
+ 102              		.cfi_restore 7
+ 103              		.cfi_def_cfa_offset 0
+ 104 0072 7047     		bx	lr
+ 105              	.L3:
+ 106              		.align	2
+ 107              	.L2:
+ 108 0074 14100240 		.word	1073877012
+ 109 0078 000C0048 		.word	1207962624
+ 110 007c 240C0048 		.word	1207962660
+ 111 0080 1C100240 		.word	1073877020
+ 112 0084 00480040 		.word	1073760256
+ 113 0088 0C480040 		.word	1073760268
+ 114              		.cfi_endproc
+ 115              	.LFE0:
+ 117              		.section	.text.MYUSART_SendData,"ax",%progbits
+ 118              		.align	1
+ 119              		.global	MYUSART_SendData
+ 120              		.syntax unified
+ 121              		.thumb
+ARM GAS  C:\Users\chian\AppData\Local\Temp\ccxueF9s.s 			page 4
+
+
+ 122              		.thumb_func
+ 124              	MYUSART_SendData:
+ 125              	.LFB1:
+  53:./Src/myusart.c **** 
+  54:./Src/myusart.c **** void MYUSART_SendData(uint8_t* pTxBuffer, uint8_t len)
+  55:./Src/myusart.c **** {
+ 126              		.loc 1 55 1
+ 127              		.cfi_startproc
+ 128              		@ args = 0, pretend = 0, frame = 16
+ 129              		@ frame_needed = 1, uses_anonymous_args = 0
+ 130              		@ link register save eliminated.
+ 131 0000 80B4     		push	{r7}
+ 132              	.LCFI4:
+ 133              		.cfi_def_cfa_offset 4
+ 134              		.cfi_offset 7, -4
+ 135 0002 85B0     		sub	sp, sp, #20
+ 136              	.LCFI5:
+ 137              		.cfi_def_cfa_offset 24
+ 138 0004 00AF     		add	r7, sp, #0
+ 139              	.LCFI6:
+ 140              		.cfi_def_cfa_register 7
+ 141 0006 7860     		str	r0, [r7, #4]
+ 142 0008 0B46     		mov	r3, r1
+ 143 000a FB70     		strb	r3, [r7, #3]
+ 144              	.LBB2:
+  56:./Src/myusart.c ****     for(uint8_t i = 0; i < len; i++) {
+ 145              		.loc 1 56 17
+ 146 000c 0023     		movs	r3, #0
+ 147 000e FB73     		strb	r3, [r7, #15]
+ 148              		.loc 1 56 5
+ 149 0010 16E0     		b	.L5
+ 150              	.L8:
+  57:./Src/myusart.c ****         /* Waiting for the transmit data register empty (bit 7 TXE) */
+  58:./Src/myusart.c ****         while(!(USART3_ISR & 0x80));
+ 151              		.loc 1 58 14
+ 152 0012 00BF     		nop
+ 153              	.L6:
+ 154              		.loc 1 58 17 discriminator 1
+ 155 0014 104B     		ldr	r3, .L9
+ 156 0016 1B68     		ldr	r3, [r3]
+ 157              		.loc 1 58 28 discriminator 1
+ 158 0018 03F08003 		and	r3, r3, #128
+ 159              		.loc 1 58 14 discriminator 1
+ 160 001c 002B     		cmp	r3, #0
+ 161 001e F9D0     		beq	.L6
+  59:./Src/myusart.c ****         /* Send Data */
+  60:./Src/myusart.c ****         USART3_TDR = (*pTxBuffer++ & 0xFF);
+ 162              		.loc 1 60 33
+ 163 0020 7B68     		ldr	r3, [r7, #4]
+ 164 0022 5A1C     		adds	r2, r3, #1
+ 165 0024 7A60     		str	r2, [r7, #4]
+ 166              		.loc 1 60 23
+ 167 0026 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 168              		.loc 1 60 9
+ 169 0028 0C4B     		ldr	r3, .L9+4
+ 170              		.loc 1 60 20
+ 171 002a 1A60     		str	r2, [r3]
+ARM GAS  C:\Users\chian\AppData\Local\Temp\ccxueF9s.s 			page 5
+
+
+  61:./Src/myusart.c ****         /* Waiting for the transmit complete (bit 6 TC) */
+  62:./Src/myusart.c ****         while(!(USART3_ISR & 0x40));
+ 172              		.loc 1 62 14
+ 173 002c 00BF     		nop
+ 174              	.L7:
+ 175              		.loc 1 62 17 discriminator 1
+ 176 002e 0A4B     		ldr	r3, .L9
+ 177 0030 1B68     		ldr	r3, [r3]
+ 178              		.loc 1 62 28 discriminator 1
+ 179 0032 03F04003 		and	r3, r3, #64
+ 180              		.loc 1 62 14 discriminator 1
+ 181 0036 002B     		cmp	r3, #0
+ 182 0038 F9D0     		beq	.L7
+  56:./Src/myusart.c ****         /* Waiting for the transmit data register empty (bit 7 TXE) */
+ 183              		.loc 1 56 34 discriminator 2
+ 184 003a FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 185 003c 0133     		adds	r3, r3, #1
+ 186 003e FB73     		strb	r3, [r7, #15]
+ 187              	.L5:
+  56:./Src/myusart.c ****         /* Waiting for the transmit data register empty (bit 7 TXE) */
+ 188              		.loc 1 56 5 discriminator 1
+ 189 0040 FA7B     		ldrb	r2, [r7, #15]	@ zero_extendqisi2
+ 190 0042 FB78     		ldrb	r3, [r7, #3]	@ zero_extendqisi2
+ 191 0044 9A42     		cmp	r2, r3
+ 192 0046 E4D3     		bcc	.L8
+ 193              	.LBE2:
+  63:./Src/myusart.c ****     }
+  64:./Src/myusart.c **** }
+ 194              		.loc 1 64 1
+ 195 0048 00BF     		nop
+ 196 004a 00BF     		nop
+ 197 004c 1437     		adds	r7, r7, #20
+ 198              	.LCFI7:
+ 199              		.cfi_def_cfa_offset 4
+ 200 004e BD46     		mov	sp, r7
+ 201              	.LCFI8:
+ 202              		.cfi_def_cfa_register 13
+ 203              		@ sp needed
+ 204 0050 5DF8047B 		ldr	r7, [sp], #4
+ 205              	.LCFI9:
+ 206              		.cfi_restore 7
+ 207              		.cfi_def_cfa_offset 0
+ 208 0054 7047     		bx	lr
+ 209              	.L10:
+ 210 0056 00BF     		.align	2
+ 211              	.L9:
+ 212 0058 1C480040 		.word	1073760284
+ 213 005c 28480040 		.word	1073760296
+ 214              		.cfi_endproc
+ 215              	.LFE1:
+ 217              		.section	.text.MYUSART_ReceiveData,"ax",%progbits
+ 218              		.align	1
+ 219              		.global	MYUSART_ReceiveData
+ 220              		.syntax unified
+ 221              		.thumb
+ 222              		.thumb_func
+ 224              	MYUSART_ReceiveData:
+ARM GAS  C:\Users\chian\AppData\Local\Temp\ccxueF9s.s 			page 6
+
+
+ 225              	.LFB2:
+  65:./Src/myusart.c **** 
+  66:./Src/myusart.c **** uint8_t MYUSART_ReceiveData()
+  67:./Src/myusart.c **** {
+ 226              		.loc 1 67 1
+ 227              		.cfi_startproc
+ 228              		@ args = 0, pretend = 0, frame = 8
+ 229              		@ frame_needed = 1, uses_anonymous_args = 0
+ 230              		@ link register save eliminated.
+ 231 0000 80B4     		push	{r7}
+ 232              	.LCFI10:
+ 233              		.cfi_def_cfa_offset 4
+ 234              		.cfi_offset 7, -4
+ 235 0002 83B0     		sub	sp, sp, #12
+ 236              	.LCFI11:
+ 237              		.cfi_def_cfa_offset 16
+ 238 0004 00AF     		add	r7, sp, #0
+ 239              	.LCFI12:
+ 240              		.cfi_def_cfa_register 7
+  68:./Src/myusart.c ****     uint8_t data;
+  69:./Src/myusart.c ****     /* Waiting for the transmit data transmit to USART_RDR register (USART_ISR bit 5 RXNE) */
+  70:./Src/myusart.c ****     while(!(USART3_ISR & 0x20));
+ 241              		.loc 1 70 10
+ 242 0006 00BF     		nop
+ 243              	.L12:
+ 244              		.loc 1 70 13 discriminator 1
+ 245 0008 0A4B     		ldr	r3, .L14
+ 246 000a 1B68     		ldr	r3, [r3]
+ 247              		.loc 1 70 24 discriminator 1
+ 248 000c 03F02003 		and	r3, r3, #32
+ 249              		.loc 1 70 10 discriminator 1
+ 250 0010 002B     		cmp	r3, #0
+ 251 0012 F9D0     		beq	.L12
+  71:./Src/myusart.c ****     /* Receive Data */
+  72:./Src/myusart.c ****     data = USART3_RDR;
+ 252              		.loc 1 72 12
+ 253 0014 084B     		ldr	r3, .L14+4
+ 254 0016 1B68     		ldr	r3, [r3]
+ 255              		.loc 1 72 10
+ 256 0018 FB71     		strb	r3, [r7, #7]
+  73:./Src/myusart.c ****     /* Clear RXNE by USARTx_RQR (bit 3 RXFRQ) */
+  74:./Src/myusart.c ****     USART3_RQR |= 1 << 3;
+ 257              		.loc 1 74 16
+ 258 001a 084B     		ldr	r3, .L14+8
+ 259 001c 1B68     		ldr	r3, [r3]
+ 260 001e 074A     		ldr	r2, .L14+8
+ 261 0020 43F00803 		orr	r3, r3, #8
+ 262 0024 1360     		str	r3, [r2]
+  75:./Src/myusart.c ****     return data;
+ 263              		.loc 1 75 12
+ 264 0026 FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+  76:./Src/myusart.c **** }
+ 265              		.loc 1 76 1
+ 266 0028 1846     		mov	r0, r3
+ 267 002a 0C37     		adds	r7, r7, #12
+ 268              	.LCFI13:
+ 269              		.cfi_def_cfa_offset 4
+ARM GAS  C:\Users\chian\AppData\Local\Temp\ccxueF9s.s 			page 7
+
+
+ 270 002c BD46     		mov	sp, r7
+ 271              	.LCFI14:
+ 272              		.cfi_def_cfa_register 13
+ 273              		@ sp needed
+ 274 002e 5DF8047B 		ldr	r7, [sp], #4
+ 275              	.LCFI15:
+ 276              		.cfi_restore 7
+ 277              		.cfi_def_cfa_offset 0
+ 278 0032 7047     		bx	lr
+ 279              	.L15:
+ 280              		.align	2
+ 281              	.L14:
+ 282 0034 1C480040 		.word	1073760284
+ 283 0038 24480040 		.word	1073760292
+ 284 003c 18480040 		.word	1073760280
+ 285              		.cfi_endproc
+ 286              	.LFE2:
+ 288              		.section	.rodata
+ 289              		.align	2
+ 290              	.LC0:
+ 291 0000 0D00     		.ascii	"\015\000"
+ 292              		.section	.text._write,"ax",%progbits
+ 293              		.align	1
+ 294              		.global	_write
+ 295              		.syntax unified
+ 296              		.thumb
+ 297              		.thumb_func
+ 299              	_write:
+ 300              	.LFB3:
+  77:./Src/myusart.c **** 
+  78:./Src/myusart.c **** int _write(int file, char *ptr, int len)
+  79:./Src/myusart.c **** {
+ 301              		.loc 1 79 1
+ 302              		.cfi_startproc
+ 303              		@ args = 0, pretend = 0, frame = 16
+ 304              		@ frame_needed = 1, uses_anonymous_args = 0
+ 305 0000 80B5     		push	{r7, lr}
+ 306              	.LCFI16:
+ 307              		.cfi_def_cfa_offset 8
+ 308              		.cfi_offset 7, -8
+ 309              		.cfi_offset 14, -4
+ 310 0002 84B0     		sub	sp, sp, #16
+ 311              	.LCFI17:
+ 312              		.cfi_def_cfa_offset 24
+ 313 0004 00AF     		add	r7, sp, #0
+ 314              	.LCFI18:
+ 315              		.cfi_def_cfa_register 7
+ 316 0006 F860     		str	r0, [r7, #12]
+ 317 0008 B960     		str	r1, [r7, #8]
+ 318 000a 7A60     		str	r2, [r7, #4]
+  80:./Src/myusart.c **** 	MYUSART_SendData((uint8_t*)ptr, len);
+ 319              		.loc 1 80 2
+ 320 000c 7B68     		ldr	r3, [r7, #4]
+ 321 000e DBB2     		uxtb	r3, r3
+ 322 0010 1946     		mov	r1, r3
+ 323 0012 B868     		ldr	r0, [r7, #8]
+ 324 0014 FFF7FEFF 		bl	MYUSART_SendData
+ARM GAS  C:\Users\chian\AppData\Local\Temp\ccxueF9s.s 			page 8
+
+
+  81:./Src/myusart.c **** 	MYUSART_SendData((uint8_t*)"\r", 1);
+ 325              		.loc 1 81 2
+ 326 0018 0121     		movs	r1, #1
+ 327 001a 0448     		ldr	r0, .L18
+ 328 001c FFF7FEFF 		bl	MYUSART_SendData
+  82:./Src/myusart.c **** 	return len;
+ 329              		.loc 1 82 9
+ 330 0020 7B68     		ldr	r3, [r7, #4]
+  83:./Src/myusart.c **** }
+ 331              		.loc 1 83 1
+ 332 0022 1846     		mov	r0, r3
+ 333 0024 1037     		adds	r7, r7, #16
+ 334              	.LCFI19:
+ 335              		.cfi_def_cfa_offset 8
+ 336 0026 BD46     		mov	sp, r7
+ 337              	.LCFI20:
+ 338              		.cfi_def_cfa_register 13
+ 339              		@ sp needed
+ 340 0028 80BD     		pop	{r7, pc}
+ 341              	.L19:
+ 342 002a 00BF     		.align	2
+ 343              	.L18:
+ 344 002c 00000000 		.word	.LC0
+ 345              		.cfi_endproc
+ 346              	.LFE3:
+ 348              		.section	.rodata
+ 349 0002 0000     		.align	2
+ 350              	.LC1:
+ 351 0004 0A0D00   		.ascii	"\012\015\000"
+ 352              		.section	.text._read,"ax",%progbits
+ 353              		.align	1
+ 354              		.global	_read
+ 355              		.syntax unified
+ 356              		.thumb
+ 357              		.thumb_func
+ 359              	_read:
+ 360              	.LFB4:
+  84:./Src/myusart.c **** 
+  85:./Src/myusart.c **** int _read(int file, char *ptr, int len) 
+  86:./Src/myusart.c **** {
+ 361              		.loc 1 86 1
+ 362              		.cfi_startproc
+ 363              		@ args = 0, pretend = 0, frame = 24
+ 364              		@ frame_needed = 1, uses_anonymous_args = 0
+ 365 0000 80B5     		push	{r7, lr}
+ 366              	.LCFI21:
+ 367              		.cfi_def_cfa_offset 8
+ 368              		.cfi_offset 7, -8
+ 369              		.cfi_offset 14, -4
+ 370 0002 86B0     		sub	sp, sp, #24
+ 371              	.LCFI22:
+ 372              		.cfi_def_cfa_offset 32
+ 373 0004 00AF     		add	r7, sp, #0
+ 374              	.LCFI23:
+ 375              		.cfi_def_cfa_register 7
+ 376 0006 F860     		str	r0, [r7, #12]
+ 377 0008 B960     		str	r1, [r7, #8]
+ARM GAS  C:\Users\chian\AppData\Local\Temp\ccxueF9s.s 			page 9
+
+
+ 378 000a 7A60     		str	r2, [r7, #4]
+ 379              	.LBB3:
+  87:./Src/myusart.c **** 	for (int i = 0; i < len; i++) {
+ 380              		.loc 1 87 11
+ 381 000c 0023     		movs	r3, #0
+ 382 000e 7B61     		str	r3, [r7, #20]
+ 383              		.loc 1 87 2
+ 384 0010 13E0     		b	.L21
+ 385              	.L24:
+  88:./Src/myusart.c **** 		*ptr = (char)MYUSART_ReceiveData();
+ 386              		.loc 1 88 16
+ 387 0012 FFF7FEFF 		bl	MYUSART_ReceiveData
+ 388 0016 0346     		mov	r3, r0
+ 389 0018 1A46     		mov	r2, r3
+ 390              		.loc 1 88 8
+ 391 001a BB68     		ldr	r3, [r7, #8]
+ 392 001c 1A70     		strb	r2, [r3]
+  89:./Src/myusart.c **** 		if(*ptr == '\r') break; /* read Enter */
+ 393              		.loc 1 89 6
+ 394 001e BB68     		ldr	r3, [r7, #8]
+ 395 0020 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 396              		.loc 1 89 5
+ 397 0022 0D2B     		cmp	r3, #13
+ 398 0024 0ED0     		beq	.L26
+  90:./Src/myusart.c **** 		MYUSART_SendData((uint8_t*)ptr++, 1);
+ 399              		.loc 1 90 3 discriminator 2
+ 400 0026 BB68     		ldr	r3, [r7, #8]
+ 401 0028 5A1C     		adds	r2, r3, #1
+ 402 002a BA60     		str	r2, [r7, #8]
+ 403 002c 0121     		movs	r1, #1
+ 404 002e 1846     		mov	r0, r3
+ 405 0030 FFF7FEFF 		bl	MYUSART_SendData
+  87:./Src/myusart.c **** 		*ptr = (char)MYUSART_ReceiveData();
+ 406              		.loc 1 87 28 discriminator 2
+ 407 0034 7B69     		ldr	r3, [r7, #20]
+ 408 0036 0133     		adds	r3, r3, #1
+ 409 0038 7B61     		str	r3, [r7, #20]
+ 410              	.L21:
+  87:./Src/myusart.c **** 		*ptr = (char)MYUSART_ReceiveData();
+ 411              		.loc 1 87 2 discriminator 1
+ 412 003a 7A69     		ldr	r2, [r7, #20]
+ 413 003c 7B68     		ldr	r3, [r7, #4]
+ 414 003e 9A42     		cmp	r2, r3
+ 415 0040 E7DB     		blt	.L24
+ 416 0042 00E0     		b	.L23
+ 417              	.L26:
+  89:./Src/myusart.c **** 		if(*ptr == '\r') break; /* read Enter */
+ 418              		.loc 1 89 3
+ 419 0044 00BF     		nop
+ 420              	.L23:
+ 421              	.LBE3:
+  91:./Src/myusart.c **** 	}
+  92:./Src/myusart.c **** 	MYUSART_SendData((uint8_t*)"\n\r", 2);
+ 422              		.loc 1 92 2
+ 423 0046 0221     		movs	r1, #2
+ 424 0048 0348     		ldr	r0, .L27
+ 425 004a FFF7FEFF 		bl	MYUSART_SendData
+ARM GAS  C:\Users\chian\AppData\Local\Temp\ccxueF9s.s 			page 10
+
+
+  93:./Src/myusart.c **** 	return len;
+ 426              		.loc 1 93 9
+ 427 004e 7B68     		ldr	r3, [r7, #4]
+  94:./Src/myusart.c **** }
+ 428              		.loc 1 94 1
+ 429 0050 1846     		mov	r0, r3
+ 430 0052 1837     		adds	r7, r7, #24
+ 431              	.LCFI24:
+ 432              		.cfi_def_cfa_offset 8
+ 433 0054 BD46     		mov	sp, r7
+ 434              	.LCFI25:
+ 435              		.cfi_def_cfa_register 13
+ 436              		@ sp needed
+ 437 0056 80BD     		pop	{r7, pc}
+ 438              	.L28:
+ 439              		.align	2
+ 440              	.L27:
+ 441 0058 04000000 		.word	.LC1
+ 442              		.cfi_endproc
+ 443              	.LFE4:
+ 445              		.text
+ 446              	.Letext0:
+ 447              		.file 2 "c:\\program files (x86)\\gnu arm embedded toolchain\\10 2021.10\\arm-none-eabi\\include\\
+ 448              		.file 3 "c:\\program files (x86)\\gnu arm embedded toolchain\\10 2021.10\\arm-none-eabi\\include\\
+ARM GAS  C:\Users\chian\AppData\Local\Temp\ccxueF9s.s 			page 11
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 myusart.c
+C:\Users\chian\AppData\Local\Temp\ccxueF9s.s:20     .text.MYUSART_Init:00000000 $t
+C:\Users\chian\AppData\Local\Temp\ccxueF9s.s:26     .text.MYUSART_Init:00000000 MYUSART_Init
+C:\Users\chian\AppData\Local\Temp\ccxueF9s.s:108    .text.MYUSART_Init:00000074 $d
+C:\Users\chian\AppData\Local\Temp\ccxueF9s.s:118    .text.MYUSART_SendData:00000000 $t
+C:\Users\chian\AppData\Local\Temp\ccxueF9s.s:124    .text.MYUSART_SendData:00000000 MYUSART_SendData
+C:\Users\chian\AppData\Local\Temp\ccxueF9s.s:212    .text.MYUSART_SendData:00000058 $d
+C:\Users\chian\AppData\Local\Temp\ccxueF9s.s:218    .text.MYUSART_ReceiveData:00000000 $t
+C:\Users\chian\AppData\Local\Temp\ccxueF9s.s:224    .text.MYUSART_ReceiveData:00000000 MYUSART_ReceiveData
+C:\Users\chian\AppData\Local\Temp\ccxueF9s.s:282    .text.MYUSART_ReceiveData:00000034 $d
+C:\Users\chian\AppData\Local\Temp\ccxueF9s.s:289    .rodata:00000000 $d
+C:\Users\chian\AppData\Local\Temp\ccxueF9s.s:293    .text._write:00000000 $t
+C:\Users\chian\AppData\Local\Temp\ccxueF9s.s:299    .text._write:00000000 _write
+C:\Users\chian\AppData\Local\Temp\ccxueF9s.s:344    .text._write:0000002c $d
+C:\Users\chian\AppData\Local\Temp\ccxueF9s.s:353    .text._read:00000000 $t
+C:\Users\chian\AppData\Local\Temp\ccxueF9s.s:359    .text._read:00000000 _read
+C:\Users\chian\AppData\Local\Temp\ccxueF9s.s:441    .text._read:00000058 $d
+
+NO UNDEFINED SYMBOLS
