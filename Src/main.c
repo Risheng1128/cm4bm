@@ -52,11 +52,19 @@ int main(void)
 	// b make 14th bit position as 1 (SET)
 	GPIOB_MODER |= (1 << 14); // means 0x00004000U, set 14th to 1 (datasheet)
 
-	// 3. SET 7th bit of the output data register to make I/O pin-7 HIGH
-	GPIOB_ODR |= (1 << 7); // means 0x0080
 	while (1)
 	{
-		printf("In while\n");
+		// 3. SET 7th bit of the output data register to make I/O pin-7 HIGH
+		GPIOB_ODR |= (1 << 7); // means 0x0080
+
+		for (int i = 0; i < 1000000; i++)
+			;
+
+		// Turn the Led off
+		GPIOB_ODR &= ~(1 << 7); // set the postion to 0
+
+		for (int i = 0; i < 1000000; i++)
+			;
 	}
 	return 0;
 }
