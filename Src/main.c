@@ -10,6 +10,16 @@
 #include <stdio.h>
 #include <stdint.h>
 
+/* original setting
+uint32_t *pClkCtrlreg = (uint32_t)0x40021014U; // p clock control register
+uint32_t *pPortModeReg = (uint32_t)0x48000400U;
+uint32_t *pPortOutReg = (uint32_t)0x48000414U;
+*/
+// using define to make code clean
+#define RCC_AHBENR *(volatile uint32_t *)(0x40021014U)	// AHB peripheral clock enable register, 0x40021000(RCC base address) + 0x14(offset)
+#define GPIOB_MODER *(volatile uint32_t *)(0x48000400U) // GPIOB base address + 0x00(offset)
+#define GPIOB_ODR *(volatile uint32_t *)(0x48000414U)	// GPIOB base address + 0x14(offset)
+
 int main(void)
 {
 	MYUSART_Init();
@@ -29,21 +39,21 @@ int main(void)
 	 */
 
 	// select uint32_t because all peripheral register are of 32 bits.
-	uint32_t *pClkCtrlreg = (uint32_t)0x40021014U; // p clock control register
-	uint32_t *pPortModeReg = (uint32_t)0x48000400U;
-	uint32_t *pPortOutReg = (uint32_t)0x48000414U;
+
 	// 1. enable the clock for GPIOB peripheral in the AHB2
-	*pClkCtrlreg |= 0x00040000U; // set IOPB EN to 1(datasheet)
+	RCC_AHBENR |= (1 << 18); // means	0x00040000U, set IOPB EN to 1(datasheet)
 
 	// 2. configure the mode of the IO pin as output
 	// The LED is on pin7 -> confirm 14th -> 1, 15th -> 0
 	// a. clear the 14th and 15th bit positions (CLEAR)
-	*pPortModeReg &= 0xFFFF3FFFU; // set 14th and 15th to 0 (datasheet)
+	GPIOB_MODER &= (3 << 14); // means 0xFFFF3FFFU, set 14th and 15th to 0 (datasheet)
+							  // 3 means 11 in binary
+							  // also can write ~(1 << 14) & ~(1 << 15)
 	// b make 14th bit position as 1 (SET)
-	*pPortModeReg |= 0x00004000U; // set 14th to 1 (datasheet)
+	GPIOB_MODER |= (1 << 14); // means 0x00004000U, set 14th to 1 (datasheet)
 
 	// 3. SET 7th bit of the output data register to make I/O pin-7 HIGH
-	*pPortOutReg |= 1 << 7; // 0x0080
+	GPIOB_ODR |= (1 << 7); // means 0x0080
 	while (1)
 	{
 		printf("In while\n");
