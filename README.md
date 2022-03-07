@@ -58,7 +58,7 @@ ARM-Template-Project
       - GPIOD_AFRH:      AF7 (USART3 Rx)
 
 ### USART設定
-1. 使用 USART3，因為USART3連接到Virual COM port
+1. 使用 USART3，因為USART3連接到Virtual COM port
    1. PD8 設為 USART3 TX
    2. PD9 設為 USART3 RX
    ![](https://i.imgur.com/59O5lGb.png)
