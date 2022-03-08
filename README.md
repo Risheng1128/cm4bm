@@ -100,10 +100,75 @@ ARM-Template-Project
    
 ### 使用步驟
 > make
-  ![](https://i.imgur.com/ulHDUys.png)
+```shell
+$ make
+mkdir Debug
+arm-none-eabi-gcc -c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -DUSE_HAL_DRIVER -DSTM32F303xE -IInc -O0 -Wall -fdata-sections -ffunction-sections -g -gdwarf-2 -MMD -MP -MF"Debug/main.d" -Wa,-a,-ad,-alms=Debug/main.lst ./Src/main.c -o Debug/main.o
+arm-none-eabi-gcc -c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -DUSE_HAL_DRIVER -DSTM32F303xE -IInc -O0 -Wall -fdata-sections -ffunction-sections -g -gdwarf-2 -MMD -MP -MF"Debug/myusart.d" -Wa,-a,-ad,-alms=Debug/myusart.lst ./Src/myusart.c -o Debug/myusart.o
+arm-none-eabi-gcc -c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -DUSE_HAL_DRIVER -DSTM32F303xE -IInc -O0 -Wall -fdata-sections -ffunction-sections -g -gdwarf-2 -MMD -MP -MF"Debug/syscalls.d" -Wa,-a,-ad,-alms=Debug/syscalls.lst ./Src/syscalls.c -o Debug/syscalls.o
+arm-none-eabi-gcc -c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -DUSE_HAL_DRIVER -DSTM32F303xE -IInc -O0 -Wall -fdata-sections -ffunction-sections -g -gdwarf-2 -MMD -MP -MF"Debug/sysmem.d" -Wa,-a,-ad,-alms=Debug/sysmem.lst ./Src/sysmem.c -o Debug/sysmem.o
+arm-none-eabi-gcc -x assembler-with-cpp -c -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -DUSE_HAL_DRIVER -DSTM32F303xE -IInc -O0 -Wall -fdata-sections -ffunction-sections -g -gdwarf-2 -MMD -MP -MF"Debug/startup_stm32f303zetx.d" ./Startup/startup_stm32f303zetx.s -o Debug/startup_stm32f303zetx.o
+arm-none-eabi-gcc Debug/main.o Debug/myusart.o Debug/syscalls.o Debug/sysmem.o   Debug/startup_stm32f303zetx.o   -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -specs=nano.specs -TSTM32F303ZETX_FLASH.ld  -lc -lm -lnosys -Wl,-Map=Debug/main.map,--cref -Wl,--gc-sections -o Debug/main.elf
+arm-none-eabi-size Debug/main.elf
+   text    data     bss     dec     hex filename
+   4196     108    1588    5892    1704 Debug/main.elf
+```
   
 > make upload
-  ![](https://i.imgur.com/u5SpnuL.png)
+```shell
+$ make upload
+openocd -f interface/stlink.cfg -f target/stm32f3x.cfg -c " program Debug/main.elf verify exit "
+xPack OpenOCD x86_64 Open On-Chip Debugger 0.11.0+dev (2021-12-07-17:33)
+Licensed under GNU GPL v2
+For bug reports, read
+        http://openocd.org/doc/doxygen/bugs.html
+Info : auto-selecting first available session transport "hla_swd". To override use 'transport select <transport>'.
+Info : The selected transport took over low-level target control. The results might differ compared to plain JTAG/SWD
+Info : DEPRECATED target event trace-config; use TPIU events {pre,post}-{enable,disable}
+Info : clock speed 1000 kHz
+Info : STLINK V2J38M27 (API v2) VID:PID 0483:374B
+Info : Target voltage: 3.245115
+Info : stm32f3x.cpu: Cortex-M4 r0p1 processor detected
+Info : stm32f3x.cpu: target has 6 breakpoints, 4 watchpoints
+Info : starting gdb server for stm32f3x.cpu on 3333
+Info : Listening on port 3333 for gdb connections
+Info : Unable to match requested speed 1000 kHz, using 950 kHz
+Info : Unable to match requested speed 1000 kHz, using 950 kHz
+target halted due to debug-request, current mode: Thread
+xPSR: 0x01000000 pc: 0x08000508 msp: 0x20010000
+Info : Unable to match requested speed 8000 kHz, using 4000 kHz
+Info : Unable to match requested speed 8000 kHz, using 4000 kHz
+** Programming Started **
+Info : device id = 0x10036446
+Info : flash size = 512kbytes
+** Programming Finished **
+** Verify Started **
+** Verified OK **
+shutdown command invoked
+
+```
 
 ## 結果(在putty上顯示)
    ![](https://i.imgur.com/EfIvBQZ.png)
+
+## [Eclipse: Error: init mode failed (unable to connect to the target)](https://stackoverflow.com/questions/57628401/eclipse-error-init-mode-failed-unable-to-connect-to-the-target)
+
+送電異常導致Flash memory內部亂掉
+
+[解決方法use IDE](https://ithelp.ithome.com.tw/articles/10280961)
+- Use [STLinkUtility](https://www.st.com/en/development-tools/stsw-link004.html)
+- Use [Linux](https://www.gushiciku.cn/pl/aCuQ/zh-tw)
+
+開啟STLinkUtility
+
+>按下插頭連接板子
+![](https://i.imgur.com/JK9piLH.png)
+
+如果無法連接
+**Target -> Settings -> Mode -> Connect under reset.**
+再次連接
+
+<font color=#ff00>**Utility 開著的時候不能upload**</font>
+
+>橡皮擦清除Flash memory即可
+![](https://i.imgur.com/0hZH7Xa.png)
