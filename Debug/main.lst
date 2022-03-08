@@ -1,4 +1,4 @@
-ARM GAS  C:\Users\chian\AppData\Local\Temp\ccB8Hprc.s 			page 1
+ARM GAS  C:\Users\User\AppData\Local\Temp\ccfBamh6.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -29,16 +29,21 @@ ARM GAS  C:\Users\chian\AppData\Local\Temp\ccB8Hprc.s 			page 1
   22      756C00
   23 0013 00       		.align	2
   24              	.LC1:
-  25 0014 25780A00 		.ascii	"%x\012\000"
-  26              		.section	.text.main,"ax",%progbits
-  27              		.align	1
-  28              		.global	main
-  29              		.syntax unified
-  30              		.thumb
-  31              		.thumb_func
-  33              	main:
-  34              	.LFB3:
-  35              		.file 1 "./Src/main.c"
+  25 0014 4C454420 		.ascii	"LED ON\000"
+  25      4F4E00
+  26 001b 00       		.align	2
+  27              	.LC2:
+  28 001c 4C454420 		.ascii	"LED OFF\000"
+  28      4F464600 
+  29              		.section	.text.main,"ax",%progbits
+  30              		.align	1
+  31              		.global	main
+  32              		.syntax unified
+  33              		.thumb
+  34              		.thumb_func
+  36              	main:
+  37              	.LFB3:
+  38              		.file 1 "./Src/main.c"
    1:./Src/main.c  **** /**
    2:./Src/main.c  ****  ******************************************************************************
    3:./Src/main.c  ****  * @file    main.c
@@ -52,15 +57,15 @@ ARM GAS  C:\Users\chian\AppData\Local\Temp\ccB8Hprc.s 			page 1
   11:./Src/main.c  **** #include <stdint.h>
   12:./Src/main.c  **** 
   13:./Src/main.c  **** /* original setting
-  14:./Src/main.c  **** uint32_t *pClkCtrlreg = (uint32_t)0x40021014U; // p clock control register
-  15:./Src/main.c  **** uint32_t *pPortModeReg = (uint32_t)0x48000400U;
-  16:./Src/main.c  **** uint32_t *pPortOutReg = (uint32_t)0x48000414U;
-  17:./Src/main.c  **** */
+  14:./Src/main.c  ****  * uint32_t *pClkCtrlreg = (uint32_t)0x40021014U; // p clock control register
+ARM GAS  C:\Users\User\AppData\Local\Temp\ccfBamh6.s 			page 2
+
+
+  15:./Src/main.c  ****  * uint32_t *pPortModeReg = (uint32_t)0x48000400U;
+  16:./Src/main.c  ****  * uint32_t *pPortOutReg = (uint32_t)0x48000414U;
+  17:./Src/main.c  ****  */
   18:./Src/main.c  **** // using define to make code clean
   19:./Src/main.c  **** #define RCC_AHBENR *(volatile uint32_t *)(0x40021014U)	// AHB peripheral clock enable register, 0x4
-ARM GAS  C:\Users\chian\AppData\Local\Temp\ccB8Hprc.s 			page 2
-
-
   20:./Src/main.c  **** #define GPIOB_MODER *(volatile uint32_t *)(0x48000400U) // GPIOB base address(0x48000400) + 0x00(of
   21:./Src/main.c  **** #define GPIOC_MODER *(volatile uint32_t *)(0x48000800U) // GPIOC base address(0x48000000) + 0x00(of
   22:./Src/main.c  **** #define GPIOB_ODR *(volatile uint32_t *)(0x48000414U)	// GPIOB base address + 0x14(offset)
@@ -68,28 +73,28 @@ ARM GAS  C:\Users\chian\AppData\Local\Temp\ccB8Hprc.s 			page 1
   24:./Src/main.c  **** 
   25:./Src/main.c  **** int main(void)
   26:./Src/main.c  **** {
-  36              		.loc 1 26 1
-  37              		.cfi_startproc
-  38              		@ args = 0, pretend = 0, frame = 8
-  39              		@ frame_needed = 1, uses_anonymous_args = 0
-  40 0000 80B5     		push	{r7, lr}
-  41              	.LCFI0:
-  42              		.cfi_def_cfa_offset 8
-  43              		.cfi_offset 7, -8
-  44              		.cfi_offset 14, -4
-  45 0002 82B0     		sub	sp, sp, #8
-  46              	.LCFI1:
-  47              		.cfi_def_cfa_offset 16
-  48 0004 00AF     		add	r7, sp, #0
-  49              	.LCFI2:
-  50              		.cfi_def_cfa_register 7
+  39              		.loc 1 26 1
+  40              		.cfi_startproc
+  41              		@ args = 0, pretend = 0, frame = 8
+  42              		@ frame_needed = 1, uses_anonymous_args = 0
+  43 0000 80B5     		push	{r7, lr}
+  44              	.LCFI0:
+  45              		.cfi_def_cfa_offset 8
+  46              		.cfi_offset 7, -8
+  47              		.cfi_offset 14, -4
+  48 0002 82B0     		sub	sp, sp, #8
+  49              	.LCFI1:
+  50              		.cfi_def_cfa_offset 16
+  51 0004 00AF     		add	r7, sp, #0
+  52              	.LCFI2:
+  53              		.cfi_def_cfa_register 7
   27:./Src/main.c  **** 	MYUSART_Init();
-  51              		.loc 1 27 2
-  52 0006 FFF7FEFF 		bl	MYUSART_Init
+  54              		.loc 1 27 2
+  55 0006 FFF7FEFF 		bl	MYUSART_Init
   28:./Src/main.c  **** 	printf("Connect successful\n"); // needed slash n
-  53              		.loc 1 28 2
-  54 000a 1D48     		ldr	r0, .L5
-  55 000c FFF7FEFF 		bl	puts
+  56              		.loc 1 28 2
+  57 000a 1F48     		ldr	r0, .L5
+  58 000c FFF7FEFF 		bl	puts
   29:./Src/main.c  **** 	/** Control LED
   30:./Src/main.c  **** 	 *	Address of the clock control register (AHB2)
   31:./Src/main.c  **** 	 *  0x40021000(RCC base address) + 0x14(offset)
@@ -107,131 +112,131 @@ ARM GAS  C:\Users\chian\AppData\Local\Temp\ccB8Hprc.s 			page 1
   43:./Src/main.c  **** 
   44:./Src/main.c  **** 	// 1. enable the clock for GPIOB and GPIOA peripheral in the AHB2
   45:./Src/main.c  **** 	RCC_AHBENR |= (1 << 18); // means	0x00040000U, set IOPB EN to 1(datasheet)
-  56              		.loc 1 45 13
-  57 0010 1C4B     		ldr	r3, .L5+4
-  58 0012 1B68     		ldr	r3, [r3]
-  59 0014 1B4A     		ldr	r2, .L5+4
-  60 0016 43F48023 		orr	r3, r3, #262144
-  61 001a 1360     		str	r3, [r2]
+  59              		.loc 1 45 13
+  60 0010 1E4B     		ldr	r3, .L5+4
+  61 0012 1B68     		ldr	r3, [r3]
+  62 0014 1D4A     		ldr	r2, .L5+4
+  63 0016 43F48023 		orr	r3, r3, #262144
+  64 001a 1360     		str	r3, [r2]
+ARM GAS  C:\Users\User\AppData\Local\Temp\ccfBamh6.s 			page 3
+
+
   46:./Src/main.c  **** 	RCC_AHBENR |= (1 << 19); // Open IOPC(Set IOPC EN to 1)
-  62              		.loc 1 46 13
-  63 001c 194B     		ldr	r3, .L5+4
-  64 001e 1B68     		ldr	r3, [r3]
-  65 0020 184A     		ldr	r2, .L5+4
-ARM GAS  C:\Users\chian\AppData\Local\Temp\ccB8Hprc.s 			page 3
-
-
-  66 0022 43F40023 		orr	r3, r3, #524288
-  67 0026 1360     		str	r3, [r2]
+  65              		.loc 1 46 13
+  66 001c 1B4B     		ldr	r3, .L5+4
+  67 001e 1B68     		ldr	r3, [r3]
+  68 0020 1A4A     		ldr	r2, .L5+4
+  69 0022 43F40023 		orr	r3, r3, #524288
+  70 0026 1360     		str	r3, [r2]
   47:./Src/main.c  **** 	// 2. configure the mode of the IO pin as output
   48:./Src/main.c  **** 	// Configuring PA0 as input, because we are reading data from it.
   49:./Src/main.c  **** 	// The LED is on pin7 -> confirm 14th -> 1, 15th -> 0
   50:./Src/main.c  **** 	// a. clear the 14th and 15th bit positions (CLEAR)
   51:./Src/main.c  **** 	GPIOB_MODER &= ~(3 << 14); // means 0xFFFF3FFFU, set 14th and 15th to 0 (datasheet)
-  68              		.loc 1 51 14
-  69 0028 174B     		ldr	r3, .L5+8
-  70 002a 1B68     		ldr	r3, [r3]
-  71 002c 164A     		ldr	r2, .L5+8
-  72 002e 23F44043 		bic	r3, r3, #49152
-  73 0032 1360     		str	r3, [r2]
+  71              		.loc 1 51 14
+  72 0028 194B     		ldr	r3, .L5+8
+  73 002a 1B68     		ldr	r3, [r3]
+  74 002c 184A     		ldr	r2, .L5+8
+  75 002e 23F44043 		bic	r3, r3, #49152
+  76 0032 1360     		str	r3, [r2]
   52:./Src/main.c  **** 							   // 3 means 11 in binary
   53:./Src/main.c  **** 							   // also can write ~(1 << 14) & ~(1 << 15)
   54:./Src/main.c  **** 	// b make 14th bit position as 1 (SET)
   55:./Src/main.c  **** 	GPIOB_MODER |= (1 << 14); // means 0x00004000U, set 14th to 1 (datasheet)
-  74              		.loc 1 55 14
-  75 0034 144B     		ldr	r3, .L5+8
-  76 0036 1B68     		ldr	r3, [r3]
-  77 0038 134A     		ldr	r2, .L5+8
-  78 003a 43F48043 		orr	r3, r3, #16384
-  79 003e 1360     		str	r3, [r2]
+  77              		.loc 1 55 14
+  78 0034 164B     		ldr	r3, .L5+8
+  79 0036 1B68     		ldr	r3, [r3]
+  80 0038 154A     		ldr	r2, .L5+8
+  81 003a 43F48043 		orr	r3, r3, #16384
+  82 003e 1360     		str	r3, [r2]
   56:./Src/main.c  **** 
   57:./Src/main.c  **** 	GPIOC_MODER &= ~(3 << 13); // set MODER0 to 00 (input mode)
-  80              		.loc 1 57 14
-  81 0040 124B     		ldr	r3, .L5+12
-  82 0042 1B68     		ldr	r3, [r3]
-  83 0044 114A     		ldr	r2, .L5+12
-  84 0046 23F4C043 		bic	r3, r3, #24576
-  85 004a 1360     		str	r3, [r2]
-  86              	.L4:
-  87              	.LBB2:
+  83              		.loc 1 57 14
+  84 0040 144B     		ldr	r3, .L5+12
+  85 0042 1B68     		ldr	r3, [r3]
+  86 0044 134A     		ldr	r2, .L5+12
+  87 0046 23F4C043 		bic	r3, r3, #24576
+  88 004a 1360     		str	r3, [r2]
+  89              	.L4:
+  90              	.LBB2:
   58:./Src/main.c  **** 
-  59:./Src/main.c  **** 	while (1)
-  60:./Src/main.c  **** 	{
-  61:./Src/main.c  **** 		uint8_t pinStatus = (uint8_t)GPIOC_IDR & (1 << 13);
-  88              		.loc 1 61 32
-  89 004c 104B     		ldr	r3, .L5+16
-  90 004e 1B68     		ldr	r3, [r3]
-  91              		.loc 1 61 11
-  92 0050 0023     		movs	r3, #0
-  93 0052 FB71     		strb	r3, [r7, #7]
-  62:./Src/main.c  **** 		printf("%x\n", pinStatus);
-  94              		.loc 1 62 3
-  95 0054 FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
-  96 0056 1946     		mov	r1, r3
-  97 0058 0E48     		ldr	r0, .L5+20
-  98 005a FFF7FEFF 		bl	printf
-  63:./Src/main.c  **** 		if (pinStatus)
-  99              		.loc 1 63 6
- 100 005e FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
- 101 0060 002B     		cmp	r3, #0
- 102 0062 06D0     		beq	.L2
-  64:./Src/main.c  **** 		{
-  65:./Src/main.c  **** 			// 3. SET 7th bit of the output data register to make I/O pin-7 HIGH
-  66:./Src/main.c  **** 			GPIOB_ODR |= (1 << 7); // means 0x0080
-ARM GAS  C:\Users\chian\AppData\Local\Temp\ccB8Hprc.s 			page 4
+  59:./Src/main.c  **** 	while (1) { 
+  60:./Src/main.c  **** 		// read datasheet and find out that GPIO only has 0~15th position, from 16th to 31th is reserved(
+  61:./Src/main.c  **** 		uint16_t pinStatus = (uint16_t)GPIOC_IDR & (1 << 13); // bt_press -> 2000, 0010 0000 0000 0000
+  91              		.loc 1 61 34
+  92 004c 124B     		ldr	r3, .L5+16
+  93 004e 1B68     		ldr	r3, [r3]
+  94              		.loc 1 61 44
+  95 0050 9BB2     		uxth	r3, r3
+  96              		.loc 1 61 12
+  97 0052 03F40053 		and	r3, r3, #8192
+  98 0056 FB80     		strh	r3, [r7, #6]	@ movhi
+  62:./Src/main.c  **** 		if (pinStatus) {
+  99              		.loc 1 62 6
+ 100 0058 FB88     		ldrh	r3, [r7, #6]
+ 101 005a 002B     		cmp	r3, #0
+ 102 005c 09D0     		beq	.L2
+  63:./Src/main.c  **** 			// 3. SET 7th bit of the output data register to make I/O pin-7 HIGH
+  64:./Src/main.c  **** 			GPIOB_ODR |= (1 << 7); // means 0x0080
+ARM GAS  C:\Users\User\AppData\Local\Temp\ccfBamh6.s 			page 4
 
 
- 103              		.loc 1 66 14
- 104 0064 0C4B     		ldr	r3, .L5+24
- 105 0066 1B68     		ldr	r3, [r3]
- 106 0068 0B4A     		ldr	r2, .L5+24
- 107 006a 43F08003 		orr	r3, r3, #128
- 108 006e 1360     		str	r3, [r2]
- 109 0070 ECE7     		b	.L4
- 110              	.L2:
-  67:./Src/main.c  **** 								   // printf("LED ON\n");
-  68:./Src/main.c  **** 		}
-  69:./Src/main.c  **** 		else
-  70:./Src/main.c  **** 		{
-  71:./Src/main.c  **** 			// Turn the Led off
-  72:./Src/main.c  **** 			GPIOB_ODR &= ~(1 << 7); // set the postion to 0
- 111              		.loc 1 72 14
- 112 0072 094B     		ldr	r3, .L5+24
- 113 0074 1B68     		ldr	r3, [r3]
- 114 0076 084A     		ldr	r2, .L5+24
- 115 0078 23F08003 		bic	r3, r3, #128
- 116 007c 1360     		str	r3, [r2]
- 117              	.LBE2:
-  60:./Src/main.c  **** 		uint8_t pinStatus = (uint8_t)GPIOC_IDR & (1 << 13);
- 118              		.loc 1 60 2
- 119 007e E5E7     		b	.L4
- 120              	.L6:
- 121              		.align	2
- 122              	.L5:
- 123 0080 00000000 		.word	.LC0
- 124 0084 14100240 		.word	1073877012
- 125 0088 00040048 		.word	1207960576
- 126 008c 00080048 		.word	1207961600
- 127 0090 10080048 		.word	1207961616
- 128 0094 14000000 		.word	.LC1
- 129 0098 14040048 		.word	1207960596
- 130              		.cfi_endproc
- 131              	.LFE3:
- 133              		.text
- 134              	.Letext0:
- 135              		.file 2 "c:\\program files (x86)\\gnu arm embedded toolchain\\10 2021.10\\arm-none-eabi\\include\\
- 136              		.file 3 "c:\\program files (x86)\\gnu arm embedded toolchain\\10 2021.10\\arm-none-eabi\\include\\
-ARM GAS  C:\Users\chian\AppData\Local\Temp\ccB8Hprc.s 			page 5
+ 103              		.loc 1 64 14
+ 104 005e 0F4B     		ldr	r3, .L5+20
+ 105 0060 1B68     		ldr	r3, [r3]
+ 106 0062 0E4A     		ldr	r2, .L5+20
+ 107 0064 43F08003 		orr	r3, r3, #128
+ 108 0068 1360     		str	r3, [r2]
+  65:./Src/main.c  **** 			printf("LED ON\n");
+ 109              		.loc 1 65 4
+ 110 006a 0D48     		ldr	r0, .L5+24
+ 111 006c FFF7FEFF 		bl	puts
+ 112 0070 ECE7     		b	.L4
+ 113              	.L2:
+  66:./Src/main.c  **** 		} else {
+  67:./Src/main.c  **** 			// Turn the Led off
+  68:./Src/main.c  **** 			GPIOB_ODR &= ~(1 << 7); // set the postion to 0
+ 114              		.loc 1 68 14
+ 115 0072 0A4B     		ldr	r3, .L5+20
+ 116 0074 1B68     		ldr	r3, [r3]
+ 117 0076 094A     		ldr	r2, .L5+20
+ 118 0078 23F08003 		bic	r3, r3, #128
+ 119 007c 1360     		str	r3, [r2]
+  69:./Src/main.c  **** 			printf("LED OFF\n");
+ 120              		.loc 1 69 4
+ 121 007e 0948     		ldr	r0, .L5+28
+ 122 0080 FFF7FEFF 		bl	puts
+ 123              	.LBE2:
+  59:./Src/main.c  **** 		// read datasheet and find out that GPIO only has 0~15th position, from 16th to 31th is reserved(
+ 124              		.loc 1 59 12
+ 125 0084 E2E7     		b	.L4
+ 126              	.L6:
+ 127 0086 00BF     		.align	2
+ 128              	.L5:
+ 129 0088 00000000 		.word	.LC0
+ 130 008c 14100240 		.word	1073877012
+ 131 0090 00040048 		.word	1207960576
+ 132 0094 00080048 		.word	1207961600
+ 133 0098 10080048 		.word	1207961616
+ 134 009c 14040048 		.word	1207960596
+ 135 00a0 14000000 		.word	.LC1
+ 136 00a4 1C000000 		.word	.LC2
+ 137              		.cfi_endproc
+ 138              	.LFE3:
+ 140              		.text
+ 141              	.Letext0:
+ 142              		.file 2 "c:\\program files (x86)\\gnu arm embedded toolchain\\10 2021.10\\arm-none-eabi\\include\\
+ 143              		.file 3 "c:\\program files (x86)\\gnu arm embedded toolchain\\10 2021.10\\arm-none-eabi\\include\\
+ARM GAS  C:\Users\User\AppData\Local\Temp\ccfBamh6.s 			page 5
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 main.c
-C:\Users\chian\AppData\Local\Temp\ccB8Hprc.s:20     .rodata:00000000 $d
-C:\Users\chian\AppData\Local\Temp\ccB8Hprc.s:27     .text.main:00000000 $t
-C:\Users\chian\AppData\Local\Temp\ccB8Hprc.s:33     .text.main:00000000 main
-C:\Users\chian\AppData\Local\Temp\ccB8Hprc.s:123    .text.main:00000080 $d
+C:\Users\User\AppData\Local\Temp\ccfBamh6.s:20     .rodata:00000000 $d
+C:\Users\User\AppData\Local\Temp\ccfBamh6.s:30     .text.main:00000000 $t
+C:\Users\User\AppData\Local\Temp\ccfBamh6.s:36     .text.main:00000000 main
+C:\Users\User\AppData\Local\Temp\ccfBamh6.s:129    .text.main:00000088 $d
 
 UNDEFINED SYMBOLS
 MYUSART_Init
 puts
-printf

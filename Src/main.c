@@ -11,10 +11,10 @@
 #include <stdint.h>
 
 /* original setting
-uint32_t *pClkCtrlreg = (uint32_t)0x40021014U; // p clock control register
-uint32_t *pPortModeReg = (uint32_t)0x48000400U;
-uint32_t *pPortOutReg = (uint32_t)0x48000414U;
-*/
+ * uint32_t *pClkCtrlreg = (uint32_t)0x40021014U; // p clock control register
+ * uint32_t *pPortModeReg = (uint32_t)0x48000400U;
+ * uint32_t *pPortOutReg = (uint32_t)0x48000414U;
+ */
 // using define to make code clean
 #define RCC_AHBENR *(volatile uint32_t *)(0x40021014U)	// AHB peripheral clock enable register, 0x40021000(RCC base address) + 0x14(offset)
 #define GPIOB_MODER *(volatile uint32_t *)(0x48000400U) // GPIOB base address(0x48000400) + 0x00(offset)
@@ -56,21 +56,17 @@ int main(void)
 
 	GPIOC_MODER &= ~(3 << 13); // set MODER0 to 00 (input mode)
 
-	while (1)
-	{
-		uint8_t pinStatus = (uint8_t)GPIOC_IDR & (1 << 13);
-		printf("%x\n", pinStatus);
-		if (pinStatus)
-		{
+	while (1) { 
+		// read datasheet and find out that GPIO only has 0~15th position, from 16th to 31th is reserved(useless).
+		uint16_t pinStatus = (uint16_t)GPIOC_IDR & (1 << 13); // bt_press -> 2000, 0010 0000 0000 0000
+		if (pinStatus) {
 			// 3. SET 7th bit of the output data register to make I/O pin-7 HIGH
 			GPIOB_ODR |= (1 << 7); // means 0x0080
-								   // printf("LED ON\n");
-		}
-		else
-		{
+			printf("LED ON\n");
+		} else {
 			// Turn the Led off
 			GPIOB_ODR &= ~(1 << 7); // set the postion to 0
-									// printf("LED OFF\n");
+			printf("LED OFF\n");
 		}
 	}
 	return 0;
