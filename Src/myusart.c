@@ -42,7 +42,7 @@ void MYUSART_Init()
 
     /**************************** USART Set ****************************/
     /* USART RCC Enable */
-    RCC_AHPB1ENR |= 1 << 18;   /* Enable clock of USART3 */
+    RCC_APB1ENR |= 1 << 18;   /* Enable clock of USART3 */
     /* UE (USART Enable) Set */
     USART3_CR1 |= 1 << 0;
     /* USART mode set */

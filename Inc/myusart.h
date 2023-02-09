@@ -15,7 +15,7 @@
 #define BAUDRATE_38400      38400U
 
 #define RCC_AHBENR          *(volatile uint32_t*)0x40021014U  /* AHB peripheral clock enable register */
-#define RCC_AHPB1ENR        *(volatile uint32_t*)0x4002101CU  /* APB1 peripheral clock enable register */
+#define RCC_APB1ENR        *(volatile uint32_t*)0x4002101CU  /* APB1 peripheral clock enable register */
 
 #define GPIOD_MODE          *(volatile uint32_t*)0x48000C00U  /* GPIO port mode register */
 #define GPIOD_AFRH          *(volatile uint32_t*)0x48000C24U  /* GPIO alternate function high register */
