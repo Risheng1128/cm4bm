@@ -32,6 +32,6 @@
 /* Transmit data register */
 #define USART3_TDR *(volatile uint32_t *) 0x40004828U
 
-void MYUSART_Init();
-void MYUSART_SendData(uint8_t *pTxBuffer, uint8_t len);
-uint8_t MYUSART_ReceiveData();
+void USART_Init();
+void USART_SendData(uint8_t *pTxBuffer, uint8_t len);
+uint8_t USART_ReceiveData();

@@ -25,9 +25,9 @@
  *   - Oversampling:    16
  */
 
-#include "myusart.h"
+#include "usart.h"
 
-void MYUSART_Init()
+void USART_Init()
 {
     /**************************** GPIO Set ****************************/
     /* GPIOD RCC enable */
@@ -50,7 +50,7 @@ void MYUSART_Init()
     USART3_BRR = DEFAULT_F_CLK / BAUDRATE_38400;
 }
 
-void MYUSART_SendData(uint8_t *pTxBuffer, uint8_t len)
+void USART_SendData(uint8_t *pTxBuffer, uint8_t len)
 {
     for (uint8_t i = 0; i < len; i++) {
         /* Waiting for the transmit data register empty (bit 7 TXE) */
@@ -64,7 +64,7 @@ void MYUSART_SendData(uint8_t *pTxBuffer, uint8_t len)
     }
 }
 
-uint8_t MYUSART_ReceiveData()
+uint8_t USART_ReceiveData()
 {
     uint8_t data;
     /* Waiting for the transmit data transmit to USART_RDR register (USART_ISR
@@ -80,20 +80,20 @@ uint8_t MYUSART_ReceiveData()
 
 int _write(int file, char *ptr, int len)
 {
-    MYUSART_SendData((uint8_t *) ptr, len);
-    MYUSART_SendData((uint8_t *) "\r", 1);
+    USART_SendData((uint8_t *) ptr, len);
+    USART_SendData((uint8_t *) "\r", 1);
     return len;
 }
 
 int _read(int file, char *ptr, int len)
 {
     for (int i = 0; i < len; i++) {
-        *ptr = (char) MYUSART_ReceiveData();
+        *ptr = (char) USART_ReceiveData();
         /* read Enter */
         if (*ptr == '\r')
             break;
-        MYUSART_SendData((uint8_t *) ptr++, 1);
+        USART_SendData((uint8_t *) ptr++, 1);
     }
-    MYUSART_SendData((uint8_t *) "\n\r", 2);
+    USART_SendData((uint8_t *) "\n\r", 2);
     return len;
 }

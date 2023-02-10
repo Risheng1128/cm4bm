@@ -5,11 +5,11 @@
  */
 
 #include <stdio.h>
-#include "myusart.h"
+#include "usart.h"
 
 int main(void)
 {
-    MYUSART_Init();
+    USART_Init();
     int data;
     while (1) {
         printf("input a data!!\n");
