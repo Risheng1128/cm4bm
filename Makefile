@@ -24,7 +24,7 @@ vpath %.c $(dir $(C_SOURCES))
 OBJECTS += $(patsubst %.s,$(BUILD_DIR)/%.o,$(notdir $(ASM_SOURCES)))
 vpath %.s $(dir $(ASM_SOURCES))
 
-all: clean $(BUILD_DIR)/$(TARGET).elf
+all: $(BUILD_DIR)/$(TARGET).elf
 $(BUILD_DIR)/%.o: %.c
 	$(CC) -c $(CFLAGS) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
 $(BUILD_DIR)/%.o: %.s
