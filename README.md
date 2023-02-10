@@ -1,119 +1,97 @@
-# CM4 Project
-###### tags: `ARM Cortex-M`
-使用 NUCLEO-F303ZE 完成的專案，並實作 `printf()` 及 `scanf()` 功能
+# cm4bm
+The ARM Cortex-M4 processor bare metal project with UART implementation
+- Device: [NUCLEO-F303ZE](https://www.st.com/en/evaluation-tools/nucleo-f303ze.html)
 
-## 檔案編排
+## Build and Verify
+`cm4bm` dependents on some third-party packages to build code and burn into processor like [ARM GNU Toolchain](https://developer.arm.com/Tools%20and%20Software/GNU%20Toolchain) and [stlink](https://github.com/stlink-org/stlink). Therefore, before using the project, we need to install these packages.
+
+Install [ARM GNU Toolchain](https://developer.arm.com/Tools%20and%20Software/GNU%20Toolchain):
 ```
-ARM-Template-Project
-|    Makefile
-|    README.md
-|    STM32F303.svd
-|    STM32F303ZETX_FLASH.ld
-|    st_nucleo_f3.cfg
-|────Inc
-|    |    myusart.h
-|
-|────Src
-|    |    main.c 
-|    |    myusart.c
-|    |    syscall.c
-|    |    sysmem.c
-|
-|────Startup
-|    |    startup_stm32f303zetx.s
-
+sudo apt-get update
+sudo apt-get -y install gcc-arm-none-eabi
 ```
 
-## 使用設備
-- NUCLEO-F303ZE
-  1. [官方文件規格介紹](https://www.st.com/en/evaluation-tools/nucleo-f303ze.html)
-     ![](https://i.imgur.com/xnKAENl.png)
+Install [stlink](https://github.com/stlink-org/stlink):
+```
+sudo apt-get install git cmake libusb-1.0-0-dev
+git clone https://github.com/stlink-org/stlink && cd stlink
+cmake .
+make
+cd bin && sudo cp st-* /usr/local/bin
+cd ../lib && sudo cp *.so* /lib32
+cd ../config/udev/rules.d/ && sudo cp 49-stlinkv* /etc/udev/rules.d/
+```
 
-  2. CPU: STM32F303ZE   
-     [官方文件](https://www.st.com/en/microcontrollers-microprocessors/stm32f303ze.html)
+Install [OpenOCD](https://openocd.org/):
+```
+sudo apt install openocd
+```
 
-- 需要工具
-  1. [ST-Link](https://www.st.com/content/st_com/en/products/development-tools/software-development-tools/stm32-software-development-tools/stm32-utilities/stsw-link009.html?dl=NCWMPz8nopJ5khffu%2F9QmQ%3D%3D%2CWweBOQKqZ%2Fh88%2BZkYv6600%2BzYxzrVLpvTUDLmq2eRG7lpwFzjoue0R2T%2FIhPrxz5shDoc2Iw%2FpMlGzkS5d%2B7cDojQPuWTbCMGjy7i4mRoDYG8omxLndyTs6vk9JuiWwwo6iFG5gODbBgUZE9XYj6MzT27BETsC%2FIlGdOMpyOw01kOaztq2FnADZ2T%2Fdozp3FqjWcF7BoC2kA3jX%2FWibrHNy4bIuRL4s4JsMXRBWmjDNxvYbhhCm3h7bESHdDNz6mJV1PitQm3a1X2DfqRbg%2FlIQ3iR0QVkIkj9A3ZMDCD%2FRmyu75S5hGTsJKi0zE3pG8&uid=AbAAPrnhg03EDrR2hPt2MKBBSrNbNCYh)(和板子連接)
+Build `cm4bm`:
+```
+make
+```
 
-  2. arm-none-eabi-gcc (Essential compiler driver)
-     
-     [arm-none-eabi-gcc載點](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads)
-     
-     [各種GCC指令總攬](https://gcc.gnu.org/onlinedocs/gcc-9.3.0/gcc/)
+Burn the code into processor:
+```
+make upload
+```
 
-  3. [OpenOCD](https://openocd.org/) (用來 Debug 及燒入)
-     
-     [OpenOCD for windows載點](https://gnutoolchains.com/arm-eabi/openocd/)
-  
-## 目標: 使板子可以使用 `printf()` 及 `scanf()` 函式
-### `GPIO` 設定
--  設定 `PD8` 及 `PD9` (兩者為 `USART3 Tx/Rx`)
-   1. `PD8` 設定:
-      | GPIO Setting  | Mode                    |
-      | ------------- | ----------------------  |
-      | GPIOD_MODE    | Alternate function mode |
-      | GPIOD_OSPEEDR | Low Speed               |
-      | GPIOD_PUPDR   | No Pull-up & Pull-down  |
-      | GPIOD_OTYPER  | Push-Pull               |
-      | GPIOD_AFRH    | AF7 (USART3 Tx)         |
-   2. `PD9` 設定:
-      | GPIO Setting  | Mode                    |
-      | ------------- | ----------------------  |
-      | GPIOD_MODE    | Alternate function mode |
-      | GPIOD_OSPEEDR | Low Speed               |
-      | GPIOD_PUPDR   | No Pull-up & Pull-down  |
-      | GPIOD_OTYPER  | Push-Pull               |
-      | GPIOD_AFRH    | AF7 (USART3 Rx)         |
+Generate the disassembly file:
+```
+make disassembly
+```
 
-### `USART` 設定
-1. 使用 `USART3` ，因為 `USART3` 連接到 Virtual COM port
-   1. `PD8` 設為 `USART3 TX`
-   2. `PD9` 設為 `USART3 RX`
-   ![](https://i.imgur.com/59O5lGb.png)
-   
-2. `USART3` 基本設定
-   | `USART3` parameter | Setting |
-   | ------------------ | ------- |
-   | F_CLK              | 8MHz (STM32F303ZE default clock) |
-   | USART3_Mode        | Tx/Rx Enable   |
-   | USART3_Parity      | Parity disable |
-   | USART3_StopBits    | 1     |
-   | USART3_WordLen     | 8     |
-   | USART3_Baud        | 38400 |
-   | USART3_HW_FLOW     | None  |
-   | Oversampling       | 16    |
+## Debug
+In `cm4bm`, it uses [OpenOCD](https://openocd.org/) to open the debug mode of processor. We can use the following command:
+```
+make debug
+```
 
-### 修改 `printf()` 及 `scanf()` system call
-1. `printf()`
-   ```c
-    int _write(int file, char *ptr, int len)
-    {
-	    MYUSART_SendData((uint8_t*)ptr, len);
-	    MYUSART_SendData((uint8_t*)"\r", 1);
-	    return len;
-    }
-    ```
+After typing the command, the next step is opening gdb to connect to rhe openocd.
+```
+arm-none-eabi-gdb
+```
 
-2. `scanf()`
-   ```c
-    int _read(int file, char *ptr, int len) 
-    {
-	    for (int i = 0; i < len; i++) {
-		    *ptr = (char)MYUSART_ReceiveData();
-		    if(*ptr == '\r') break; /* read Enter */
-		    MYUSART_SendData((uint8_t*)ptr++, 1);
-	    }
-	    MYUSART_SendData((uint8_t*)"\n\r", 2);
-	    return len;
-    }
-   ```
-   
-### 使用步驟
-> 輸入命令 `make`
-  ![](https://i.imgur.com/ulHDUys.png)
-  
-> 輸入命令 `make upload`
-  ![](https://i.imgur.com/u5SpnuL.png)
+Connect to the openocd:
+```
+target remote localhost:3333
+```
 
-> 結果(在 putty 上顯示)
-  ![](https://i.imgur.com/EfIvBQZ.png)
+## GPIO setup
+Set `PD8` and `PD9` as USART3 TX and USART3 TX respectively.
+
+- `PD8` setup:
+   | GPIO Setting  | Mode                    |
+   | ------------- | ----------------------  |
+   | GPIOD_MODE    | Alternate function mode |
+   | GPIOD_OSPEEDR | Low Speed               |
+   | GPIOD_PUPDR   | No Pull-up & Pull-down  |
+   | GPIOD_OTYPER  | Push-Pull               |
+   | GPIOD_AFRH    | AF7 (USART3 Tx)         |
+-  `PD9` setup:
+   | GPIO Setting  | Mode                    |
+   | ------------- | ----------------------  |
+   | GPIOD_MODE    | Alternate function mode |
+   | GPIOD_OSPEEDR | Low Speed               |
+   | GPIOD_PUPDR   | No Pull-up & Pull-down  |
+   | GPIOD_OTYPER  | Push-Pull               |
+   | GPIOD_AFRH    | AF7 (USART3 Rx)         |
+
+## USART setup
+| `USART3` config | Setting |
+| ------------------ | ------- |
+| F_CLK              | 8MHz (STM32F303ZE default clock) |
+| USART3_Mode        | Tx/Rx Enable   |
+| USART3_Parity      | Parity disable |
+| USART3_StopBits    | 1     |
+| USART3_WordLen     | 8     |
+| USART3_Baud        | 38400 |
+| USART3_HW_FLOW     | None  |
+| Oversampling       | 16    |
+
+## Reference
+- [NUCLEO-F303ZE](https://www.st.com/en/evaluation-tools/nucleo-f303ze.html)
+- [OpenOCD](https://openocd.org/)
+- [stlink](https://github.com/stlink-org/stlink)
+- [Use ARM Cortex-M4 on Linux](https://hackmd.io/@Risheng/rkVSOVLwF)
