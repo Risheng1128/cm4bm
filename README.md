@@ -58,6 +58,8 @@ Connect to the openocd:
 $ target remote localhost:3333
 ```
 
+In other hand, `cm4bm` can be debugged via [cortex-debug](https://github.com/Marus/cortex-debug). It can be found in extensions of visual studio code.
+
 ## Test
 Install [putty](https://www.putty.org/) to communicate with the board:
 ```shell
