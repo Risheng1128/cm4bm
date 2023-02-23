@@ -15,7 +15,7 @@ int main(void)
         printf("input a data!!\n");
         scanf("%d", &data);
         printf("data = %d\n", data);
-        fflush(stdin); /* Claer buffer */
+        fflush(stdin); /* clear buffer */
     }
     return 0;
 }
