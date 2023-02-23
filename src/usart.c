@@ -77,23 +77,3 @@ uint8_t USART_ReceiveData()
     USART3_RQR |= 1 << 3;
     return data;
 }
-
-int _write(int file, char *ptr, int len)
-{
-    USART_SendData((uint8_t *) ptr, len);
-    USART_SendData((uint8_t *) "\r", 1);
-    return len;
-}
-
-int _read(int file, char *ptr, int len)
-{
-    for (int i = 0; i < len; i++) {
-        *ptr = (char) USART_ReceiveData();
-        /* read Enter */
-        if (*ptr == '\r')
-            break;
-        USART_SendData((uint8_t *) ptr++, 1);
-    }
-    USART_SendData((uint8_t *) "\n\r", 2);
-    return len;
-}
