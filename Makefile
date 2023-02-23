@@ -8,7 +8,6 @@ OUT = build
 BIN = main
 
 C_SRC = syscalls.c \
-        sysmem.c \
 	    usart.c \
 	    $(BIN).c
 ASM_SRC = startup.s
