@@ -6,59 +6,73 @@ The ARM Cortex-M4 processor bare metal project with UART implementation
 `cm4bm` dependents on some third-party packages to build code and burn into processor like [ARM GNU Toolchain](https://developer.arm.com/Tools%20and%20Software/GNU%20Toolchain) and [stlink](https://github.com/stlink-org/stlink). Therefore, before using the project, we need to install these packages.
 
 Install [ARM GNU Toolchain](https://developer.arm.com/Tools%20and%20Software/GNU%20Toolchain):
-```
-sudo apt-get update
-sudo apt-get -y install gcc-arm-none-eabi
+```shell
+$ sudo apt-get update
+$ sudo apt-get -y install gcc-arm-none-eabi
 ```
 
 Install [stlink](https://github.com/stlink-org/stlink):
-```
-sudo apt-get install git cmake libusb-1.0-0-dev
-git clone https://github.com/stlink-org/stlink && cd stlink
-cmake .
-make
-cd bin && sudo cp st-* /usr/local/bin
-cd ../lib && sudo cp *.so* /lib32
-cd ../config/udev/rules.d/ && sudo cp 49-stlinkv* /etc/udev/rules.d/
+```shell
+$ sudo apt-get install git cmake libusb-1.0-0-dev
+$ git clone https://github.com/stlink-org/stlink && cd stlink
+$ cmake .
+$ make
+$ cd bin && sudo cp st-* /usr/local/bin
+$ cd ../lib && sudo cp *.so* /lib32
+$ cd ../config/udev/rules.d/ && sudo cp 49-stlinkv* /etc/udev/rules.d/
 ```
 
 Install [OpenOCD](https://openocd.org/):
-```
-sudo apt install openocd
+```shell
+$ sudo apt install openocd
 ```
 
 Build `cm4bm`:
-```
-make
+```shell
+$ make
 ```
 
 Burn the code into processor:
-```
-make upload
+```shell
+$ make upload
 ```
 
 Generate the disassembly file:
-```
-make disassembly
+```shell
+$ make disassembly
 ```
 
 ## Debug
 In `cm4bm`, it uses [OpenOCD](https://openocd.org/) to open the debug mode of processor. We can use the following command:
-```
-make debug
+```shell
+$ make debug
 ```
 
 After typing the command, the next step is opening gdb to connect to rhe openocd.
-```
-arm-none-eabi-gdb
+```shell
+$ arm-none-eabi-gdb
 ```
 
 Connect to the openocd:
-```
-target remote localhost:3333
+```shell
+$ target remote localhost:3333
 ```
 
-## GPIO setup
+## Test
+Install [putty](https://www.putty.org/) to communicate with the board:
+```shell
+$ sudo apt-get install putty
+```
+
+Result:
+```
+Input a data!!
+255
+data = 255
+Input a data!!
+```
+
+## GPIO setting
 Set `PD8` and `PD9` as USART3 TX and USART3 TX respectively.
 
 - `PD8` setup:
