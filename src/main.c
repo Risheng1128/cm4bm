@@ -1,6 +1,5 @@
 /**
  * @file    main.c
- * @author  Ri-Sheng Chen
  * @brief   This file is a example
  */
 

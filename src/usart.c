@@ -1,6 +1,5 @@
 /**
- * @file    myusart.c
- * @author  Ri-Sheng Chen
+ * @file    usart.c
  * @brief   Functions to enable USART3 on STM32F303ZE
  *
  * @attention

@@ -1,6 +1,5 @@
 /**
- * @file    myusart.h
- * @author  Ri-Sheng Chen
+ * @file    usart.h
  * @brief   This file contains some macros of GPIOD and USART3
  */
 
