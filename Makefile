@@ -1,9 +1,9 @@
 # Generic Makefile
-
 OUT ?= build
 BIN ?= main
 # only the filename of target
 BIN_NAME = $(notdir $(BIN))
+BIN_DIR = $(dir $(BIN))
 
 C_SRC += syscalls.c \
 	    usart.c \
@@ -24,6 +24,8 @@ OBJS = $(patsubst %.c, $(OUT)/%.o, $(C_SRC))
 OBJS += $(patsubst %.s, $(OUT)/%.o, $(ASM_SRC))
 
 all: $(OUT)/$(BIN_NAME)
+$(OUT)/%.o: $(BIN_DIR)%.c
+	$(CC) -c $(CFLAGS) $< -o $@
 $(OUT)/%.o: src/%.c
 	$(CC) -c $(CFLAGS) $< -o $@
 $(OUT)/%.o: src/%.s
