@@ -110,4 +110,4 @@ Set `PD8` and `PD9` as USART3 TX and USART3 TX respectively.
 - [NUCLEO-F303ZE](https://www.st.com/en/evaluation-tools/nucleo-f303ze.html)
 - [OpenOCD](https://openocd.org/)
 - [stlink](https://github.com/stlink-org/stlink)
-- [Use ARM Cortex-M4 on Linux](https://hackmd.io/@Risheng/rkVSOVLwF)
+- [First time to use ARM Cortex-M4 ](https://hackmd.io/@Risheng/cm4bm)
