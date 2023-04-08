@@ -3,6 +3,7 @@
  * @brief system calls file
  */
 
+#include <sys/stat.h>
 #include "usart.h"
 extern int __io_putchar(int ch) __attribute__((weak));
 extern int __io_getchar(void) __attribute__((weak));
@@ -30,4 +31,20 @@ int _read(int file, char *ptr, int len)
 int _lseek(int file, int ptr, int dir)
 {
     return 0;
+}
+
+int _close(int file)
+{
+    return -1;
+}
+
+int _fstat(int file, struct stat *st)
+{
+    st->st_mode = S_IFCHR;
+    return 0;
+}
+
+int _isatty(int file)
+{
+    return 1;
 }
