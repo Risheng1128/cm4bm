@@ -6,24 +6,20 @@ BIN ?= main
 INPUT_C_SRC ?= src/main.c
 C_SRC = src/syscalls.c \
 	src/usart.c \
+	src/startup.c \
 	$(INPUT_C_SRC)
 
 INPUT_C_INC ?=
 C_INC = -Iinc \
 	$(INPUT_C_INC)
 
-# assembly file
-ASM_SRC = src/startup.s
-
 # linker script
 LDSCRIPT = src/link.ld
 
 VPATH  = $(dir $(C_SRC))
-VPATH += $(dir $(ASM_SRC))
 
 # object file
 OBJS  = $(patsubst %.c, $(OUT)/%.o, $(notdir $(C_SRC)))
-OBJS += $(patsubst %.s, $(OUT)/%.o, $(notdir $(ASM_SRC)))
 
 # toolchain
 TOOLCHAIN = arm-none-eabi-
@@ -38,9 +34,6 @@ LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) -lc -lm -lnosys
 all: $(OUT)/$(BIN)
 # compile
 $(OUT)/%.o: %.c
-	$(CC) -c $(CFLAGS) $< -o $@
-
-$(OUT)/%.o: %.s
 	$(CC) -c $(CFLAGS) $< -o $@
 
 # link
