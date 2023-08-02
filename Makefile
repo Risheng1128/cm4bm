@@ -28,7 +28,7 @@ SZ = $(TOOLCHAIN)size
 
 # toolchain options
 MCU = -mcpu=cortex-m4
-CFLAGS = $(MCU) -mthumb $(C_INC) -O0 -Wall
+CFLAGS = $(MCU) -mthumb $(C_INC) -O0 -Wall -g
 LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) -lc -lm -lnosys
 
 all: $(OUT)/$(BIN)
@@ -47,9 +47,6 @@ $(OUT):
 .PHONY: disassembly load upload clean
 disassembly: $(OUT)/$(BIN)
 	$(TOOLCHAIN)objdump -d $^ > $(OUT)/$(BIN).S
-
-debug:
-	openocd -f board/st_nucleo_f3.cfg
 
 upload:
 	openocd -f interface/stlink-v2-1.cfg -f target/stm32f3x.cfg -c " program $(OUT)/$(BIN) verify exit "
